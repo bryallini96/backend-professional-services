@@ -2,19 +2,34 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new Schema({
-    username: {
+    firstName: {
         type: String,
-        required: true
+        required: [true, 'first name is required']
+    },
+    lastName: {
+        type: String,
+        required: [true, 'last name is required']
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: [true, ' email is required'],
+        unique: [true, 'email already registered']
     },
     password: {
         type: String, 
-        required: true
-    }
+        required: [true, 'password is required']
+    },
+    active: Boolean,
+    profile: {
+        type: String,
+        required: [true, 'profile is required']
+    },
+    education: {
+        type: String,
+        required: [true, 'education is required']
+    },
+    description: String,
+    interest: String
 });
 
 userSchema.methods.encryptPassword = async (password) => {

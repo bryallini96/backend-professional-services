@@ -7,11 +7,16 @@ const authCtrl = {};
 
 authCtrl.signup =  async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { firstName, lastName, email, password, profile, education, description, interest } = req.body;
         const user = new User({
-            username,
+            firstName,
+            lastName,
             email,
-            password
+            password,
+            profile,
+            education,
+            description,
+            interest
         });
         user.password = await user.encryptPassword(user.password);
         await user.save();
@@ -54,7 +59,6 @@ authCtrl.signin =  async (req, res) => {
         expiresIn: 60 * 60 * 2 
     });
     res.status(200).json({auth: true, token });
-
 };
 
 authCtrl.logout =  function(req, res) {
