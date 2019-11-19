@@ -14,5 +14,6 @@ app.use('/api/requests', require('./routes/requests'));
 app.use('/api/postulates', require('./routes/postulates'));
 app.use('/api/opinions', require('./routes/opinions'));
 app.use('/api', require('./routes/auth'));
+app.use('/api/currency', require('./routes/currency'));
 
 module.exports = app;
