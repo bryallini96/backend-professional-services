@@ -1,9 +1,11 @@
 const { Router } = require('express');
 const router = Router();
 const { getPostulates, getPostulate, deletePostulate } = require('../controllers/postulates.controller');
+const verifyToken = require('../controllers/verifyToken');
+
 router.route('/')
-    .get(getPostulates)
+    .get(verifyToken, getPostulates)
 router.route('/:id')
-    .get(getPostulate)
+    .get(verifyToken, getPostulate)
 
 module.exports = router;

@@ -1,18 +1,22 @@
 const { Router } = require('express');
 const router = Router();
 const { getRequests, getRequest, createRequest, updateRequest , postulateInRequest, rejectPostulate, approvePostulate, finishRequest} = require('../controllers/requests.controller');
+const verifyToken = require('../controllers/verifyToken');
+
+
 router.route('/')
-    .get(getRequests)
-    .post(createRequest)
+    .get(verifyToken, getRequests)
+    .post(verifyToken, createRequest)
 router.route('/:id')
-    .get(getRequest)
-    .put(updateRequest)
+    .get(verifyToken, getRequest)
+    .put(verifyToken, updateRequest)
 router.route('/:id/postulate')
-    .post(postulateInRequest)
+    .post(verifyToken, postulateInRequest)
 router.route('/:id/finished')
-    .put(finishRequest)
+    .put(verifyToken, finishRequest)
 router.route('/postulates/:id/rejected')
-    .put(rejectPostulate)
+    .put(verifyToken, rejectPostulate)
 router.route('/postulates/:id/approved')
-    .put(approvePostulate)
+    .put(verifyToken, approvePostulate)
+
 module.exports = router;
