@@ -11,5 +11,7 @@ app.use(express.json());
 
 // routes
 app.use('/api/requests', require('./routes/requests'));
+app.use('/api/postulates', require('./routes/postulates'));
+app.use('/api/opinions', require('./routes/opinions'));
 
 module.exports = app;

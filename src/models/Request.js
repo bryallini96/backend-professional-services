@@ -1,29 +1,54 @@
-const { Schema, model } = require('mongoose');
+const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
+
 const requestSchema = new Schema({
     description: {
         type: String,
-        required: true
+        required: [true, 'description is required']
     },
-    status:{
+    activities: [{
         type: String,
-        enum: ['DRAFT', 'PUBLISHED', 'APPROVED', 'FINISHED'],
-        default: 'DRAFT'
+        required: [true, 'at least one activity is required']
+    }],
+    status: {
+        type: String,
+        enum: ['PUBLISHED', 'IN-PROGRESS', 'APPROVED', 'FINISHED'],
+        default: 'PUBLISHED'
     },
-    salary: Number,
+    salary: {
+        type: Number,
+        required: [true, 'salary is required']
+    },
+    currency: {
+        type: String,
+        enum: ['MXN', 'USD'], 
+        required: [true, 'currency is required']
+    },
     profile: {
         type: String,
-        required: true
+        required: [true, 'profile is required']
     },
-    timeReminder: Date,
     address: {
         type: String,
-        required: true
+        required: [true, 'address is required']
     },
     city: {
         type: String,
-        required: true
-    }
+        required: [true, 'city is required']
+    },
+    laborDays: String,
+    timeReminder: {
+        type: Date,
+        required: [true, 'Time reminder is required']
+    },
+    active: Boolean,
+    observations: String,
+    postulates: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Postulate'
+    }]
 }, {
     timestamps: true
 });
-module.exports = model('Request', requestSchema);
+
+module.exports = mongoose.model('Request', requestSchema);
