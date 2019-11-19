@@ -8,6 +8,11 @@ const authCtrl = {};
 authCtrl.signup =  async (req, res) => {
     try {
         const { firstName, lastName, email, password, profile, education, description, interest } = req.body;
+        const userFind = await User.findOne({email: email});
+        if(userFind) {
+            console.log("email: " + email +  " is already registered");
+            return res.status(400).json({message: "email: " + email +  " is already registered"});
+        }
         const user = new User({
             firstName,
             lastName,
@@ -19,22 +24,22 @@ authCtrl.signup =  async (req, res) => {
             interest
         });
         user.password = await user.encryptPassword(user.password);
-        await user.save();
-        const token = jwt.sign({id: user._id}, config.secret, {
-            expiresIn: 60 * 60 * 2
+        await user.save().then(() => {
+            const token = jwt.sign({id: user._id}, config.secret, {
+                expiresIn: 60 * 60 * 2
+            });
+            res.json({auth: true, token});
+            console.log("User: " + user._id + " created");
+        }).catch((error) => {
+            console.log(error.message);
+            res.status(400).json({message: error.message});
         });
-        res.json({auth: true, token});
+        
     } catch (e) {
         console.log(e);
         res.status(500).send('There was a problem registering your user');
     }
 };
-
-router.get('', async (req, res, next) => {
-    const users = await User.find();
-    res.json(users);
-
-});
 
 authCtrl.me = async (req, res) => {
     const user = await User.findById(req.userId, {password: 0});
@@ -48,7 +53,7 @@ authCtrl.signin =  async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({email: email});
     if(!user) {
-        return res.status(404).send("The email does not exists");
+        return res.status(404).json({message: "The email does not exists"});
     }
     const validPassword = await user.validatePassword(password);
     if (!validPassword) {
@@ -64,5 +69,11 @@ authCtrl.signin =  async (req, res) => {
 authCtrl.logout =  function(req, res) {
     res.status(200).send({auth: false, token: null});
 };
+
+authCtrl.getUsers = async (req, res) => {
+    console.log("Getting all users created");
+    const users = await User.find();
+    res.json(users);
+}
 
 module.exports = authCtrl;
