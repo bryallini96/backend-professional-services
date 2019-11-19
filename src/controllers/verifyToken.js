@@ -9,9 +9,13 @@ function verifyToken(req, res, next) {
             message: 'No token provided'
         });
     }
-    const decoded = jwt.verify(token, config.secret);
-    req.userId = decoded.id;
-    next();
+    try {
+        const decoded = jwt.verify(token, config.secret);
+        req.userId = decoded.id;
+        next();
+    } catch (error) {
+        res.status(403).json({message: "Token expired"});
+    }
 }
 
 module.exports = verifyToken;
