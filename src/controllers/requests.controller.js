@@ -28,12 +28,13 @@ requestsCtrl.getRequest = async (req, res) => {
 
 requestsCtrl.createRequest = async (req, res) => {
     console.log("Creating request");
-    const {description, salary, currency, laborDays, profile, address, city, timeReminder, activities} = req.body;
+    const {description, salary, currency, workTime, laborDays, profile, address, city, timeReminder, activities} = req.body;
     const newRequest = new Request({
         description: description,
         status: 'PUBLISHED',
         salary: salary,
         currency: currency,
+        workTime: workTime,
         laborDays: laborDays,
         profile: profile,
         address: address,
@@ -53,12 +54,13 @@ requestsCtrl.createRequest = async (req, res) => {
 
 requestsCtrl.updateRequest = async (req, res) => {
     console.log("Updating request with id: " + req.params.id);
-    const {description, salary, currency, laborDays, profile, address, city, timeReminder, activities} = req.body;
+    const {description, salary, currency, workTime, laborDays, profile, address, city, timeReminder, activities} = req.body;
     await Request.findById(req.params.id).then((request) => {
         request.description = description;
         request.salary = salary;
         request.currency = currency;
         request.laborDays = laborDays;
+        request.workTime = workTime;
         request.profile = profile;
         request.address = address;
         request.city = city;

@@ -36,7 +36,14 @@ const requestSchema = new Schema({
         type: String,
         required: [true, 'city is required']
     },
-    laborDays: String,
+    workTime: {
+        type: String,
+        required: true
+    },
+    laborDays: {
+        type: String,
+        required: true
+    },
     timeReminder: {
         type: Date,
         required: [true, 'Time reminder is required']
