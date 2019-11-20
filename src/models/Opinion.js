@@ -11,10 +11,16 @@ const opinionSchema = new Schema({
         type: String,
         required: [true, 'opinion is required']
     },
-    request: [{
+    request: {
         type: Schema.Types.ObjectId,
-        ref: 'Request'
-    }]
+        ref: 'Request',
+        required: true
+    },
+    createdByUser: {
+        type:Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 });
 
 module.exports = model('Opinion', opinionSchema);

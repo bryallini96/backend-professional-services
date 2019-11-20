@@ -7,10 +7,16 @@ const postulateSchema = new Schema({
         enum: ['POSTULATE', 'APPROVED', 'REJECTED'],
         default: 'POSTULATE'
     },
-    request: [{
+    request: {
         type: Schema.Types.ObjectId,
-        ref: 'Request'
-    }]
+        ref: 'Request',
+        required: true
+    },
+    createdByUser: {
+        type:Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 }, {
     timestamps: true
 });

@@ -46,7 +46,12 @@ const requestSchema = new Schema({
     postulates: [{
         type: Schema.Types.ObjectId,
         ref: 'Postulate'
-    }]
+    }],
+    createdByUser: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 }, {
     timestamps: true
 });
