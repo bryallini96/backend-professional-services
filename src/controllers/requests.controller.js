@@ -5,13 +5,19 @@ const requestsCtrl = {};
 requestsCtrl.getRequests = async (req, res) => {
     console.log("Getting requests created filtering by");
     console.log(req.query);    
-    const requests = await Request.find(req.query).populate('postulates');
+    const requests = await Request.find(req.query).populate('postulates').populate('createdByUser');
     res.json(requests);
 };
 
+requestsCtrl.getMeRequests = async (req, res) => {
+    console.log("Getting requests of user: " + req.userId);
+    const requests = await Request.find({createdByUser: req.userId}).populate('postulates').populate('createdByUser');
+    res.json(requests);
+}
+
 requestsCtrl.getRequest = async (req, res) => {
     console.log("Getting request with id: " + req.params.id);
-    await Request.findById(req.params.id).populate('postulates').then((request) => {
+    await Request.findById(req.params.id).populate('postulates').populate('createdByUser').then((request) => {
         res.json(request);
         console.log(request);
     }).catch((error) => {
@@ -34,7 +40,8 @@ requestsCtrl.createRequest = async (req, res) => {
         city: city,
         timeReminder: timeReminder,
         activities: activities,
-        active: true
+        active: true,
+        createdByUser: req.userId
     });
     await newRequest.save().then(() => {
         res.json({message: 'Request created'});
@@ -75,7 +82,8 @@ requestsCtrl.postulateInRequest = async (req, res) => {
     await Request.findById(req.params.id).then((request) => {
         if (request.status === 'PUBLISHED' || request.status === 'IN-PROGRESS') {
             const newPostulate = new Postulate();
-            newPostulate.request.push(request);
+            newPostulate.request = request.id;
+            newPostulate.createdByUser = req.userId;
             newPostulate.save();
             request.postulates.push(newPostulate);
             request.status = 'IN-PROGRESS';
@@ -112,7 +120,7 @@ requestsCtrl.rejectPostulate = async (req, res) => {
 requestsCtrl.approvePostulate = async (req,res) => {
     await Postulate.findById(req.params.id).then((postulate) => {
         if(postulate.status === 'POSTULATE') {
-            Request.findById(postulate.request[0]).populate('postulates').then((request) => {
+            Request.findById(postulate.request).populate('postulates').then((request) => {
                 if(request.status === 'IN-PROGRESS') {
                     request.postulates.map((postulateInRequest) => {
                         if(postulateInRequest.status === 'POSTULATE' && postulateInRequest.id != req.params.id) {
