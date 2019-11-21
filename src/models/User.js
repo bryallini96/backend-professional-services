@@ -14,11 +14,13 @@ const userSchema = new Schema({
         type: String,
         required: [true, ' email is required'],
         trim: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     password: {
         type: String, 
-        required: [true, 'password is required']
+        required: [true, 'password is required'],
+        minlength: 7
     },
     active: Boolean,
     profile: {
