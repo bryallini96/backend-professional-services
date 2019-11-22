@@ -134,6 +134,7 @@ requestsCtrl.approvePostulate = async (req,res) => {
                     postulate.save();
                     console.log('Postulate with id: ' + postulate.id + ' Updated to status: ' + postulate.status);
                     request.status = 'APPROVED';
+                    request.active = false;
                     request.save();
                     console.log('Request with id: ' + request.id + ' Updated to status: ' + request.status);
                     res.json({message: 'Postulate with id: ' + postulate.id + ' Updated to status: ' + postulate.status});

@@ -44,6 +44,7 @@ authCtrl.signup =  async (req, res) => {
 authCtrl.me = async (req, res) => {
     const user = await User.findById(req.userId, {password: 0});
     if(!user) {
+        console.log("No user found");
         return res.status(404).send("No user found");
     }
     res.status(200).json(user);
@@ -53,6 +54,7 @@ authCtrl.signin =  async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({email: email});
     if(!user) {
+        console.log("The email" + req.body.email + " does not exists");
         return res.status(404).json({message: "The email does not exists"});
     }
     const validPassword = await user.validatePassword(password);
