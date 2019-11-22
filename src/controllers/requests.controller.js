@@ -81,7 +81,12 @@ requestsCtrl.updateRequest = async (req, res) => {
 
 requestsCtrl.postulateInRequest = async (req, res) => {
     console.log("Postulate in request with id: " + req.params.id);
-    await Request.findById(req.params.id).then((request) => {
+    await Request.findById(req.params.id).populate('postulates').then((request) => {
+        if(request.createdByUser == req.userId) {
+            console.log("Cannot postulate in your own request");
+            return res.status(404).json({message: "Cannot postulate in your own request"}); 
+        }
+
         if (request.status === 'PUBLISHED' || request.status === 'IN-PROGRESS') {
             const newPostulate = new Postulate();
             newPostulate.request = request.id;
