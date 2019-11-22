@@ -45,7 +45,7 @@ authCtrl.me = async (req, res) => {
     const user = await User.findById(req.userId, {password: 0});
     if(!user) {
         console.log("No user found");
-        return res.status(404).send("No user found");
+        return res.status(400).json({message: "No user found"});
     }
     res.status(200).json(user);
 };
